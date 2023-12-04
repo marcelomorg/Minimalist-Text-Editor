@@ -35,9 +35,10 @@ void Mte::run()
 	{
 		Mte::choose();
 		Mte::statusline();
-		Mte::print();
-		int caracter  = getch();
+		Mte::print(); 
+		int caracter = getch();
 		Mte::inputText(caracter);
+		
 	};
 
 	/*
@@ -84,7 +85,7 @@ void Mte::statusline()
 	attroff(A_REVERSE);
 }
 
-void Mte::inputText(int ctr)
+void Mte::inputText(int & ctr)
 {
 	switch (way)
 	{
@@ -100,14 +101,26 @@ void Mte::inputText(int ctr)
 					break;
 			}
 			break;
+
 		case 'i':
 			switch (ctr)
 			{
 				case 27:
 					way = 'n';
+					break;
+				case 127:
+				case KEY_BACKSPACE:
+					Mte::setBackspace();
+					break;
+				
+				case 10: 		//line feed
+				case 13:		//Carriage return
+				case KEY_ENTER:
+					Mte::setEnter();
+					ctr = 0;
+					break;
+
 				default:
-					std::string s(1, ctr);
-					//textLineCaptured.push_back(s);
 					textLineCaptured[y].insert(x, 1, ctr);
 					++x;
 					break;
@@ -126,10 +139,32 @@ void Mte::print()
 		}
 		else
 		{
-			mvprintw(0, i, textLineCaptured[i].c_str());
-
+			mvprintw(i, 0, textLineCaptured[i].c_str());
+			clrtoeol();
 		}
-		clrtoeol();
 	}	
 	move(y,x); // move cursor of the final from 'Y' to 'X' axis begin.
+}
+
+void Mte::setBackspace()
+{
+	if(x == 0 && y > 0)
+	{
+		textLineCaptured.pop_back();
+		x = textLineCaptured[y - 1].length();
+		--y;
+	}
+	else if (x > 0)
+	{
+		textLineCaptured[y].erase(--x, 1);
+	}
+	
+}
+
+void Mte::setEnter()
+{
+	textLineCaptured.push_back(textLineCaptured[y].c_str());
+	++y;
+	x = 0;
+	textLineCaptured[y].erase();
 }

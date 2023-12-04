@@ -19,6 +19,11 @@ class Mte
 		void run(); 			//Do loop
 		void choose();			//Choose way
 		void statusline();		//Print screen way status
-		void inputText(int);
+		void inputText(int &);
 		void print();
+		
+		void setBackspace();
+		void setEnter();
+		
+
 };
