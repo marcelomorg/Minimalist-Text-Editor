@@ -35,6 +35,7 @@ void Mte::run()
 	{
 		Mte::choose();
 		Mte::statusline();
+		Mte::coordinates();
 		Mte::print(); 
 		int caracter = getch();
 		Mte::inputText(caracter);
@@ -81,7 +82,17 @@ void Mte::choose()
 void Mte::statusline()
 {
 	attron(A_REVERSE);
-	mvprintw(LINES -1, COLS - (status.length() + 3) , status.c_str() );
+	mvprintw(LINES -1, COLS - COLS, status.c_str() );
+	attroff(A_REVERSE);
+}
+
+void Mte::coordinates()
+{
+	std::string c = "COLS: test";
+	std::string r = "ROW: test";
+	attron(A_REVERSE);
+	mvprintw(LINES - 1, COLS - (r.length() + c.length() + 5), c.c_str());
+	mvprintw(LINES - 1, COLS - (r.length() + 2), r.c_str());
 	attroff(A_REVERSE);
 }
 
@@ -119,7 +130,18 @@ void Mte::inputText(int & ctr)
 					Mte::setEnter();
 					ctr = 0;
 					break;
-
+				case KEY_UP:
+					Mte::setUp();
+					break;
+				case KEY_DOWN:
+					Mte::setDown();
+					break;;
+				// case KEY_LEFT:
+				// 	Mte::setLeft();
+				// 	break;
+				// case KEY_RIGHT:
+				// 	Mte::setRight();
+				// 	break;
 				default:
 					textLineCaptured[y].insert(x, 1, ctr);
 					++x;
@@ -167,4 +189,30 @@ void Mte::setEnter()
 	++y;
 	x = 0;
 	textLineCaptured[y].erase();
+}
+
+void Mte::setUp()
+{
+	if( y <= static_cast<size_t>(LINES) && y <= textLineCaptured.size() - 1 )
+	{
+		--y;
+	}
+	if( x >= textLineCaptured[y].length())
+	{
+		x = textLineCaptured[y].length();
+	}
+	move(y,x);
+}
+
+void Mte::setDown()
+{
+	if(y <= static_cast<size_t>(LINES) && y <= textLineCaptured[y].length() - 1)
+	{
+		++y;
+	}
+	if ( x > textLineCaptured[y].length())
+	{
+		x = textLineCaptured[y].length();
+	}
+	move (y, x);
 }
