@@ -88,12 +88,30 @@ void Mte::statusline()
 
 void Mte::coordinates()
 {
-	std::string c = "COLS: test";
-	std::string r = "ROW: test";
+	std::stringstream bufferLines, bufferCols;
+	std::string l = "";
+	std::string c = "";
+	std::string & rl = l;
+	std::string & rc = c;
+	
+	bufferLines << "Lines: ";
+	bufferLines << textLineCaptured.size();
+	l = bufferLines.str();
+
+	bufferCols << "Cols: ";
+	bufferCols << x;
+	c = bufferCols.str();
+
 	attron(A_REVERSE);
-	mvprintw(LINES - 1, COLS - (r.length() + c.length() + 5), c.c_str());
-	mvprintw(LINES - 1, COLS - (r.length() + 2), r.c_str());
+	mvprintw(LINES - 1, COLS - 20, rl.c_str());
+	mvprintw(LINES - 1, COLS - 10, rc.c_str());
 	attroff(A_REVERSE);
+	clrtoeol();
+
+
+	// Erase string stream
+	// bufferLines.str("");
+	// bufferCols.str("");
 }
 
 void Mte::inputText(int & ctr)
@@ -193,7 +211,7 @@ void Mte::setEnter()
 
 void Mte::setUp()
 {
-	if( y <= static_cast<size_t>(LINES) && y <= textLineCaptured.size() - 1 )
+	if( y <= static_cast<size_t>(LINES) && y <= textLineCaptured.size() - 1 && y > 0)
 	{
 		--y;
 	}
@@ -206,7 +224,7 @@ void Mte::setUp()
 
 void Mte::setDown()
 {
-	if(y <= static_cast<size_t>(LINES) && y <= textLineCaptured[y].length() - 1)
+	if(y <= static_cast<size_t>(LINES) && y <= textLineCaptured[y].length() - 1 && y < textLineCaptured.size() - 1)
 	{
 		++y;
 	}
@@ -216,3 +234,4 @@ void Mte::setDown()
 	}
 	move (y, x);
 }
+

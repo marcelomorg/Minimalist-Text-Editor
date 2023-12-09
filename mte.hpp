@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <memory>
 #include <string>
+#include <sstream>
 
 class Mte 
 {
