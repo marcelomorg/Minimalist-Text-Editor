@@ -154,12 +154,12 @@ void Mte::inputText(int & ctr)
 				case KEY_DOWN:
 					Mte::setDown();
 					break;;
-				// case KEY_LEFT:
-				// 	Mte::setLeft();
-				// 	break;
-				// case KEY_RIGHT:
-				// 	Mte::setRight();
-				// 	break;
+				case KEY_LEFT:
+					Mte::setLeft();
+					break;
+				case KEY_RIGHT:
+					Mte::setRight();
+					break;
 				default:
 					textLineCaptured[y].insert(x, 1, ctr);
 					++x;
@@ -235,3 +235,18 @@ void Mte::setDown()
 	move (y, x);
 }
 
+void Mte::setLeft()
+{
+	if(x > 0)
+	{
+		--x;
+	}
+}
+
+void Mte::setRight()
+{
+	if(x < textLineCaptured[y].length())
+	{
+		++x;
+	}
+}
