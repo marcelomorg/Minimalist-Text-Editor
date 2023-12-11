@@ -160,6 +160,9 @@ void Mte::inputText(int & ctr)
 				case KEY_RIGHT:
 					Mte::setRight();
 					break;
+				case KEY_DC:
+					Mte::setDelete();
+					break;
 				default:
 					textLineCaptured[y].insert(x, 1, ctr);
 					++x;
@@ -248,5 +251,18 @@ void Mte::setRight()
 	if(x < textLineCaptured[y].length())
 	{
 		++x;
+	}
+}
+
+void Mte::setDelete()
+{
+	if(x < textLineCaptured[y].length())
+	{
+		textLineCaptured[y].erase(x,1);
+	}
+	if(x == textLineCaptured[y].length() && y < textLineCaptured.size() - 1)
+	{
+		textLineCaptured[y] += textLineCaptured[y+1];
+		textLineCaptured.erase(textLineCaptured.begin() + (y+1));
 	}
 }

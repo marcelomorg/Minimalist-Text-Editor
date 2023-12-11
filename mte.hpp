@@ -30,4 +30,5 @@ class Mte
 		void setDown();
 		void setLeft();
 		void setRight();
+		void setDelete();
 };
