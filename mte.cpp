@@ -1,6 +1,8 @@
 #include "mte.hpp"
 #include <cstddef>
+#include <curses.h>
 #include <ncurses.h>
+#include <string>
 
 Mte::Mte(const std::string& file)
 {
@@ -10,7 +12,7 @@ Mte::Mte(const std::string& file)
 
 	if (file.empty())
 	{
-		filename = "untitled"; 
+		filename = "new file"; 
 	}
 	else
 	{
@@ -21,6 +23,7 @@ Mte::Mte(const std::string& file)
 	noecho();
 	cbreak();
 	keypad(stdscr, true);
+	use_default_colors();
 };
 
 Mte::~Mte()
@@ -69,10 +72,10 @@ void Mte::choose()
 	{
 		case 27: //KEY "Esc"
 		case 'n':
-			status = "NORMAL";
+			status = "MODE: NORMAL";
 			break;
 		case 'i':
-			status = "INSERT";
+			status = "MODE: INSERT";
 			break;
 		case 'q':
 			break;
@@ -81,9 +84,33 @@ void Mte::choose()
 
 void Mte::statusline()
 {
+
+	start_color(); //Creating color profile.
+	if(way == 'n')
+	{
+		init_pair(1, COLOR_CYAN, COLOR_BLACK);
+	}
+	else
+	{
+		init_pair(1, COLOR_RED, COLOR_BLACK);
+	}
+
+	// ATTR turn on
 	attron(A_REVERSE);
+	attron(A_BOLD);
+	attron(COLOR_PAIR(1));
+
+	for(int i{0}; i < COLS; i++)
+	{
+		mvprintw(LINES-1, i, " ");
+	}
 	mvprintw(LINES -1, COLS - COLS, status.c_str() );
+
+	// ATTR turn off
+	attroff(COLOR_PAIR(1));
+	attroff(A_BOLD);
 	attroff(A_REVERSE);
+;
 }
 
 void Mte::coordinates()
@@ -91,8 +118,10 @@ void Mte::coordinates()
 	std::stringstream bufferLines, bufferCols;
 	std::string l = "";
 	std::string c = "";
+	std::string panel;
 	std::string & rl = l;
 	std::string & rc = c;
+	
 	
 	bufferLines << "Lines: ";
 	bufferLines << textLineCaptured.size();
@@ -102,9 +131,18 @@ void Mte::coordinates()
 	bufferCols << x;
 	c = bufferCols.str();
 
+	panel = "| "+ rl + " | " + rc + " | FILE: " + filename + " |";
+
 	attron(A_REVERSE);
-	mvprintw(LINES - 1, COLS - 20, rl.c_str());
-	mvprintw(LINES - 1, COLS - 10, rc.c_str());
+	attron(A_BOLD);
+	attron(COLOR_PAIR(1));
+
+	// mvprintw(LINES - 1, COLS - 20, rl.c_str());
+	// mvprintw(LINES - 1, COLS - 10, rc.c_str());
+	mvprintw(LINES -1, COLS - 40, panel.c_str());
+
+	attroff(COLOR_PAIR(1));
+	attroff(A_BOLD);
 	attroff(A_REVERSE);
 	clrtoeol();
 
