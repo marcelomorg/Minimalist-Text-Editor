@@ -163,6 +163,12 @@ void Mte::inputText(int & ctr)
 				case KEY_DC:
 					Mte::setDelete();
 					break;
+				case KEY_BTAB:
+				case KEY_CTAB:
+				case KEY_STAB:
+				case 9:
+					Mte::setTab();
+					break;
 				default:
 					textLineCaptured[y].insert(x, 1, ctr);
 					++x;
@@ -264,5 +270,23 @@ void Mte::setDelete()
 	{
 		textLineCaptured[y] += textLineCaptured[y+1];
 		textLineCaptured.erase(textLineCaptured.begin() + (y+1));
+	}
+}
+
+void Mte::setTab()
+{
+	int rest = textLineCaptured[y].length();
+	if( rest % 4 == 0 )
+	{
+		textLineCaptured[y].insert(x, "    "); //4 spaces
+		x += 4;
+	} else
+	{
+		std::string & text  = textLineCaptured[y];
+		for(int i = text.length(); i % 4 != 0; i++)
+		{
+			text.insert(x, " "); //1 space
+			x += 1;
+		}
 	}
 }
