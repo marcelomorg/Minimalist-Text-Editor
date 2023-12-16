@@ -32,4 +32,7 @@ class Mte
 		void setRight();
 		void setDelete();
 		void setTab();
+
+		void openfile();
+		void savefile();
 };

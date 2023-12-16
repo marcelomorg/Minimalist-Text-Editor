@@ -1,7 +1,10 @@
 #include "mte.hpp"
 #include <cstddef>
 #include <curses.h>
+#include <filesystem>
+#include <fstream>
 #include <ncurses.h>
+#include <stdexcept>
 #include <string>
 
 Mte::Mte(const std::string& file)
@@ -12,12 +15,16 @@ Mte::Mte(const std::string& file)
 
 	if (file.empty())
 	{
-		filename = "new file"; 
+		filename = "new file";
+		// TODO
+		// Create function to ask if user wants create a new file or not. 
 	}
 	else
 	{
 		filename = file;
 	}
+
+	Mte::openfile();
 
 	initscr();
 	noecho();
@@ -41,8 +48,7 @@ void Mte::run()
 		Mte::coordinates();
 		Mte::print(); 
 		int caracter = getch();
-		Mte::inputText(caracter);
-		
+		Mte::inputText(caracter);		
 	};
 
 	/*
@@ -72,11 +78,13 @@ void Mte::choose()
 	{
 		case 27: //KEY "Esc"
 		case 'n':
-			status = "MODE: NORMAL";
+			status = "MODE: NORMAL\t\t| (i) INSERT MODE | (w) SAVE FILE | (q) EXIT |";
 			break;
 		case 'i':
-			status = "MODE: INSERT";
+			status = "MODE: INSERT\t\t| (ESC) NORMAL MODE | ('ESC' 'w') SAVE FILE |";
 			break;
+		case 'w':
+			status = "MODE: NORMAL - SAVED FILE!\t\t| (i) INSERT MODE |(q) EXIT |";
 		case 'q':
 			break;
 	};
@@ -90,9 +98,13 @@ void Mte::statusline()
 	{
 		init_pair(1, COLOR_CYAN, COLOR_BLACK);
 	}
-	else
+	else if(way == 'w')
 	{
-		init_pair(1, COLOR_RED, COLOR_BLACK);
+		init_pair(1, COLOR_GREEN, COLOR_BLACK);
+	}
+	else 
+	{
+		init_pair(1, COLOR_WHITE, COLOR_BLACK);
 	}
 
 	// ATTR turn on
@@ -156,15 +168,19 @@ void Mte::inputText(int & ctr)
 {
 	switch (way)
 	{
-		case 27:
+		case 27: //ESC key
 		case 'n':
 			switch (ctr)
 			{
 				case 'q':
-					way = 'q';
+					way = 'q';					
 					break;
 				case 'i':
 					way = 'i';
+					break;
+				case 'w':
+					way = 'w';
+					Mte::savefile();
 					break;
 			}
 			break;
@@ -172,7 +188,7 @@ void Mte::inputText(int & ctr)
 		case 'i':
 			switch (ctr)
 			{
-				case 27:
+				case 27: //ESC key
 					way = 'n';
 					break;
 				case 127:
@@ -212,6 +228,17 @@ void Mte::inputText(int & ctr)
 					++x;
 					break;
 			}
+		case 'w':
+			switch (ctr) 
+			{
+				case 'q':
+					way = 'q';
+					break;
+				case 'i':
+					way = 'i';
+					break;
+			}
+
 	}
 }
 
@@ -327,4 +354,51 @@ void Mte::setTab()
 			x += 1;
 		}
 	}
+}
+
+void Mte::openfile()
+{
+	if(std::filesystem::exists(filename))
+	{
+		//in from a file
+		std::ifstream currentFileStream (filename);
+		if(currentFileStream.is_open())
+		{
+			textLineCaptured.pop_back(); //remove linha used in vector inicialization
+			while(!currentFileStream.eof())
+			{
+				std::string fileBuffer;
+				std::getline(currentFileStream , fileBuffer);
+				textLineCaptured.push_back(fileBuffer);
+			}
+			textLineCaptured.pop_back(); //remove last line not writed.
+			move(x, 0);
+			move(y, 0);
+
+		}
+		else
+		{
+			throw std::runtime_error("Cannot open file. Permission denied.");
+		}
+	}
+}
+
+void Mte::savefile()
+{
+	if(std::filesystem::exists(filename))
+	{
+		//out to a file
+		std::ofstream currentFileStream(filename);
+		if(currentFileStream.is_open())
+		{
+			for(size_t i{0}; i < textLineCaptured.size(); i++)
+			{
+				currentFileStream << textLineCaptured[i] + "\n";
+			}
+
+			currentFileStream.close();
+		}
+	}
+	// TODO
+	// Create function to ask if user wants create new file with content.
 }
