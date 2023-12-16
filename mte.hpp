@@ -35,4 +35,6 @@ class Mte
 
 		void openfile();
 		void savefile();
+
+		void warning(std::string);
 };

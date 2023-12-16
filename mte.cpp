@@ -1,10 +1,10 @@
 #include "mte.hpp"
 #include <cstddef>
+#include <cstdlib>
 #include <curses.h>
 #include <filesystem>
 #include <fstream>
 #include <ncurses.h>
-#include <stdexcept>
 #include <string>
 
 Mte::Mte(const std::string& file)
@@ -12,7 +12,6 @@ Mte::Mte(const std::string& file)
 	textLineCaptured.push_back("");
 	way ='n';
 	status = "NORMAL";
-
 	if (file.empty())
 	{
 		filename = "new file";
@@ -29,7 +28,7 @@ Mte::Mte(const std::string& file)
 	initscr();
 	noecho();
 	cbreak();
-	keypad(stdscr, true);
+	keypad(stdscr, TRUE);
 	use_default_colors();
 };
 
@@ -102,9 +101,14 @@ void Mte::statusline()
 	{
 		init_pair(1, COLOR_GREEN, COLOR_BLACK);
 	}
-	else 
+	else if(way == 'i')
 	{
 		init_pair(1, COLOR_WHITE, COLOR_BLACK);
+	}
+	else
+	{
+		init_pair(1, COLOR_RED, COLOR_BLACK);
+		way = 'n';
 	}
 
 	// ATTR turn on
@@ -151,7 +155,7 @@ void Mte::coordinates()
 
 	// mvprintw(LINES - 1, COLS - 20, rl.c_str());
 	// mvprintw(LINES - 1, COLS - 10, rc.c_str());
-	mvprintw(LINES -1, COLS - 40, panel.c_str());
+	mvprintw(LINES -1, COLS - panel.length(), panel.c_str());
 
 	attroff(COLOR_PAIR(1));
 	attroff(A_BOLD);
@@ -182,6 +186,29 @@ void Mte::inputText(int & ctr)
 					way = 'w';
 					Mte::savefile();
 					break;
+				case  'z':	//TEST KEY
+
+				//Window alert
+				WINDOW * win1 = newwin(6, 40, LINES - (LINES / 2 + 3), COLS - (COLS / 2 + 20));
+				start_color();
+				init_pair(5, COLOR_BLACK, COLOR_WHITE);
+				wbkgd(win1, COLOR_PAIR(5));
+				mvwprintw( win1, 2, 10, "Press any key to exit");
+				wgetch(win1);
+				wrefresh(win1);
+
+				//system("sleep 3");
+
+				delwin(win1);
+
+				break;
+
+				//TODO
+				// Create navagation in normal mode.				
+				// case KEY_DOWN:
+				// 	break;
+				// case KEY_UP:
+				// 	break;
 			}
 			break;
 
@@ -242,6 +269,8 @@ void Mte::inputText(int & ctr)
 	}
 }
 
+//TODO
+//Create function of the pagination.
 void Mte::print()
 {
 	for(size_t i {}; i < static_cast<size_t>(LINES - 1); ++i)
@@ -399,6 +428,16 @@ void Mte::savefile()
 			currentFileStream.close();
 		}
 	}
-	// TODO
-	// Create function to ask if user wants create new file with content.
+	else
+	{
+		Mte::warning("FILE NOT FOUND TO SAVE.");
+		// TODO
+		// Create function to ask if user wants create new file with content.
+	}
+}
+
+void Mte::warning(std::string information)
+{
+	status = information;
+	way = ' ';
 }
