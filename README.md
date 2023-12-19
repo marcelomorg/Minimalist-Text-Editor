@@ -1,4 +1,4 @@
-<h1><center> Minimalist Text Editor v1.0 </center></h1>
+<h1 align="center"> Minimalist Text Editor v1.0 </h1>
 <i>This simple text editor is being developed with a focus on its use in environments that do not have graphic resources, such as environments that only have tty type terminals.</i>
 <br><br>
 <strong><i>Minimailist text editor </strong> has 2 modes, namely:</i>
@@ -21,6 +21,6 @@
 Contact:
 <li> Github: <a href="https://github.com/marcelomorg"> github.com/marcelomorg</a></li>
 <li> Email: <a href="mailto:01101101.mgd@gmail.com?subject=github contact"> 01101101.mgd@gmail.com</a></li>
-<li> Linkdin: <a href="www.linkedin.com/in/marcelomorg">www.linkedin.com/in/marcelomorg</a></li>
+<li> Linkdin: <a href="https://www.linkedin.com/in/marcelomorg">www.linkedin.com/in/marcelomorg</a></li>
 <br>
 <center><i><b>Being developed by Marcelo Morgado</b></i></center>
