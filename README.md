@@ -5,22 +5,32 @@
 <br><br>
 <hr>
 <h3> NORMAL MODE</h3>
-<li> This mode is used for reading only. </li>
-<br>
-<center><img src= assets/mode_normal.jpg width="80%"></center>
+This mode is used for reading only.
+<br><br>
+<p align="center"><img src= assets/mode_normal.jpg width="80%"></p>
 <br>
 <hr>
 <h3> INSERT MODE </h3>
-<li> This mode is used to edit and write text. </li>
-<br>
-<center><img src= assets/mode_insert.jpg width="80%"></center>
+This mode is used to edit and write text.
+<br><br>
+<p align="center"><img src= assets/mode_insert.jpg width="80%"></p>
 <br><br>
 <hr>
 <br><br>
 <br>
-Contact:
-<li> Github: <a href="https://github.com/marcelomorg"> github.com/marcelomorg</a></li>
-<li> Email: <a href="mailto:01101101.mgd@gmail.com?subject=github contact"> 01101101.mgd@gmail.com</a></li>
-<li> Linkdin: <a href="https://www.linkedin.com/in/marcelomorg">www.linkedin.com/in/marcelomorg</a></li>
+<p align="center">CONTACT<p>
+<p align="center">
+Github:
+<br> 
+<a href="https://github.com/marcelomorg"> github.com/marcelomorg</a>
+<br><br>
+Email:
+<br> 
+<a href="mailto:01101101.mgd@gmail.com?subject=github contact"> 01101101.mgd@gmail.com</a>
+<br><br>
+Linkdin:
 <br>
-<center><i><b>Being developed by Marcelo Morgado</b></i></center>
+<a href="https://www.linkedin.com/in/marcelomorg">www.linkedin.com/in/marcelomorg</a></li>
+<p>
+<br>
+<p align="center"><i>Being developed by Marcelo Morgado</i></p>
